@@ -25,13 +25,13 @@ app.use(function(req, res, next) {
 });
 
 const courses = [
-    {id: 958476, name: 'The Lost City', userid:["auth0|61bb8ebaf995f80069de2acf", "auth0|61bb8ebaf995f80069de2ac1", "auth0|61bb8ebaf995f80069de2ac2" ]},
+    {id: 958476, name: 'The Lost City', userid:["auth0|62c3237267fdea356d288e2b", "auth0|61bb8ebaf995f80069de2ac1", "auth0|61bb8ebaf995f80069de2ac2" ]},
     {id: 958477, name: 'Dune', userid:["auth0|61bb8ebaf995f80069de2ac1", "auth0|61bb8ebaf995f80069de2ac2"]},
     {id: 958478, name: '22 Seconds', userid:[]},
-    {id: 958479, name: 'Dream Town', userid:["auth0|61bb8ebaf995f80069de2acf"]},
-    {id: 958480, name: 'Nightwork', userid:["auth0|61bb8ebaf995f80069de2acf"]},
+    {id: 958479, name: 'Dream Town', userid:["auth0|62c3237267fdea356d288e2b"]},
+    {id: 958480, name: 'Nightwork', userid:["auth0|62c3237267fdea356d288e2b"]},
     {id: 958481, name: 'The Fifth Season', userid:["auth0|61bb8ebaf995f80069de2acf"]},
-    {id: 958482, name: 'Observer', userid:["auth0|61bb8ebaf995f80069de2acf"]},
+    {id: 958482, name: 'Observer', userid:["auth0|62c3237267fdea356d288e2b"]},
 ]
 
 // middleware for authorization check
