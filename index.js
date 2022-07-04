@@ -70,12 +70,12 @@ app.get('/api/mybooks', authorizeAccessToken, (req, res) => {
     res.send(nameArray);
 });
 
-app.get('/api/books/details', authorizeAccessToken, checkPermissions('read:courses'), (req, res) => {
+app.get('/api/books/details', authorizeAccessToken, checkPermissions('read:books'), (req, res) => {
     const nameArray = courses.map(function (el) { return [el.id, el.name]; });
     res.send(nameArray);
 });
 
-app.get('/api/books/details/users', authorizeAccessToken, checkPermissionsRequired('read:courses read:admin'), (req, res) => {
+app.get('/api/books/details/users', authorizeAccessToken, checkPermissionsRequired('read:books read:books-admin'), (req, res) => {
     const nameArray = courses.map(function (el) { return [el.name, el.userid]; });
     res.send(nameArray);
 });
