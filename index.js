@@ -25,12 +25,14 @@ app.use(function(req, res, next) {
 });
 
 const courses = [
-    {id: 101, name: 'Windows Dummies', userid:["auth0|61bb8ebaf995f80069de2acf", "auth0|61bb8ebaf995f80069de2ac1", "auth0|61bb8ebaf995f80069de2ac2" ]},
-    {id: 102, name: 'MacOS Dummies', userid:["auth0|61bb8ebaf995f80069de2ac1", "auth0|61bb8ebaf995f80069de2ac2"]},
-    {id: 103, name: 'Linux for Dummies', userid:["auth0|61bb8ebaf995f80069de2acf"]},
+    {id: 958476, name: 'The Lost City', userid:["auth0|61bb8ebaf995f80069de2acf", "auth0|61bb8ebaf995f80069de2ac1", "auth0|61bb8ebaf995f80069de2ac2" ]},
+    {id: 958477, name: 'Dune', userid:["auth0|61bb8ebaf995f80069de2ac1", "auth0|61bb8ebaf995f80069de2ac2"]},
+    {id: 958478, name: '22 Seconds', userid:[]},
+    {id: 958479, name: 'Dream Town', userid:["auth0|61bb8ebaf995f80069de2acf"]},
+    {id: 958480, name: 'Nightwork', userid:["auth0|61bb8ebaf995f80069de2acf"]},
+    {id: 958481, name: 'The Fifth Season', userid:["auth0|61bb8ebaf995f80069de2acf"]},
+    {id: 958482, name: 'Observer', userid:["auth0|61bb8ebaf995f80069de2acf"]},
 ]
-
-const test = "auth0|61bb8ebaf995f80069de2acf";
 
 // middleware for authorization check
 const authorizeAccessToken = expressJwt({
@@ -50,96 +52,35 @@ const authorizeAccessToken = expressJwt({
 app.get('/', (req, res) => {
     res.send('Hello World!!!');
 });
+
 //-------------------------------------------------------------------------------------//
-app.get('/api/courses', (req, res) => {
+app.get('/api/books', (req, res) => {
     const nameArray = courses.map(function (el) { return el.name; });
     res.send(nameArray);
 });
 
-app.get('/api/mycourses', authorizeAccessToken, (req, res) => {
-    const userCourses = courses.filter(item => item.userid.indexOf('auth0|61bb8ebaf995f80069de2acf') !== -1);
+app.get('/api/mybooks', authorizeAccessToken, (req, res) => {
+    //decode header token
+    const headerToken = req.headers.authorization.split(' ')[1];
+    const decodedHeader = jwt_decode(headerToken);
+    const user = decodedHeader.sub;
+
+    const userCourses = courses.filter(item => item.userid.indexOf(user) !== -1);
     const nameArray = userCourses.map(function (el) { return el.name; });
     res.send(nameArray);
 });
 
-app.get('/api/courses/details', authorizeAccessToken, checkPermissions('read:courses'), (req, res) => {
+app.get('/api/books/details', authorizeAccessToken, checkPermissions('read:courses'), (req, res) => {
     const nameArray = courses.map(function (el) { return [el.id, el.name]; });
     res.send(nameArray);
 });
 
-app.get('/api/courses/details/users', authorizeAccessToken, checkPermissionsRequired('read:courses read:admin'), (req, res) => {
+app.get('/api/books/details/users', authorizeAccessToken, checkPermissionsRequired('read:courses read:admin'), (req, res) => {
     const nameArray = courses.map(function (el) { return [el.name, el.userid]; });
     res.send(nameArray);
 });
 
 //-------------------------------------------------------------------------------------//
-app.get('/api/role',authorizeAccessToken, checkPermissions('read:message'), (req, res) => {
-    res.json({
-        msg:"You called the role endpoint!"
-    });
-});
-
-//add new course
-app.post('/api/courses', (req, res) => {
-
-    const { error } = validateCourse(req.body); //result.error
-    if(error) return res.status(400).send(error.details[0].message);
-
-    const course = {
-        id: courses.length +1,
-        name: req.body.name
-    };
-    courses.push(course);
-    res.send(course);
-});
-
-//update course
-app.put('/api/courses/:id', (req, res) => {
-    
-    // check if course exists
-    const course = courses.find(c => c.id === parseInt(req.params.id));
-    if (!course) return res.status(404).send('The course with the given id was not found!');  
-    
-    const { error } = validateCourse(req.body); //result.error
-    if(error) return res.status(400).send(error.details[0].message);
-
-    //Update Course
-    course.name = req.body.name
-    res.send(course);
-});
-
-//delete
-app.delete('/api/courses/:id', (req, res) => {
-    
-    // check if course exists
-    const course = courses.find(c => c.id === parseInt(req.params.id));
-    if (!course) return res.status(404).send('The course with the given id was not found!');  
-    
-    const index = courses.indexOf(course);
-    courses.splice(index, 1);
-
-    res.send(course);
-});
-
-
-function validateCourse(course){
-        // check the schema
-        const schema = Joi.object({
-            name: Joi.string().min(3).required()
-        });
-        return schema.validate(course);
-};
-
-app.get('/api/courses/:id', authorizeAccessToken,(req, res) => {
-    const course = courses.find(c => c.id === parseInt(req.params.id));
-    if (!course) return res.status(404).send('The course with the given id was not found!');
-
-    //decode header token
-    const headerToken = req.headers.authorization.split(' ')[1];
-    const decodedHeader = jwt_decode(headerToken);
-    console.log(decodedHeader.sub);
-    res.send(course);
-});
 
 // PORT
 const port = process.env.PORT || 3000;

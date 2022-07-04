@@ -1,4 +1,4 @@
 {
     "domain":"dev-klnlcc0x.us.auth0.com",
-    "audience":"https://gh0st-api-nodejs.herokuapp.com"
+    "audience":"https://gh0st-books-api-nodejs.herokuapp.com/"
 }
